@@ -102,9 +102,9 @@ const gamePoke = {
 
     dealCards(player) {
         player.hand.splice(0,player.hand.length-1); //clear hand
-        player.hand.push(pickCard());
-        player.hand.push(pickCard());
-        player.hand.push(pickCard());
+        player.hand.push(this.pickCard());
+        player.hand.push(this.pickCard());
+        player.hand.push(this.pickCard());
     },
 
     playPoint(human, computer) {
