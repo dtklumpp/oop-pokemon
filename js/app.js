@@ -1,4 +1,4 @@
-console.log('you are NOT hearing me talk');
+//console.log('you are NOT hearing me talk');
 const logit = function(input1){
     console.log(input1);
 }
@@ -61,7 +61,7 @@ const pokeCards = [
     }
   ]
 
-logit(pokeCards.length);
+//logit(pokeCards.length);
 
 /*
 constructor(human, computer){
@@ -94,7 +94,7 @@ const gamePoke = {
     ///note: stop game if less than 6 cards left
 
     pickCard() {
-        logit('pick card marker');
+        //logit('PICK CARD MARKER');
         index1 = Math.floor(this.cardsLeft.length * Math.random());
         //logit(index1);
         //logit(this.cardsLeft[index1].name);
@@ -108,7 +108,7 @@ const gamePoke = {
     },
 
     dealCards(player) {
-        logit('deal cards marker');
+        //logit('DEAL CARDS MARKER');
         player.hand.splice(0,player.hand.length-1); //clear hand
         player.hand.push(this.pickCard());
         player.hand.push(this.pickCard());
@@ -116,10 +116,14 @@ const gamePoke = {
     },
 
     playPoint(human, computer) {
-        logit('play point marker');
+        //logit('PLAY POINT MARKER');
         //logit(human.hand);
-        //humChoice = prompt("which card?");
-        humChoice = Math.floor(Math.random() * human.hand.length);
+        let displayString = "which card?\n";;
+        for(let i = 0; i < human.hand.length; i++){
+          displayString += ("card "+(i+1)+" = "+human.hand[i].name+" for "+human.hand[i].damage+"\n")
+        }
+        humChoice = prompt(displayString);
+        //humChoice = Math.floor(Math.random() * human.hand.length)+1;
         humCard = human.hand.splice(humChoice-1,1)[0];
         compChoice = Math.floor(Math.random() * computer.hand.length);
         compCard = computer.hand.splice(compChoice, 1)[0];
@@ -133,23 +137,29 @@ const gamePoke = {
         else if (compCard.damage > humCard.damage){
             computer.score += 1;
         }
-        logit(human.score);
-        logit(computer.score);
+        //logit(human.score);
+        //logit(computer.score);
     },
 
     playRound(human, computer) {
-        logit("playround marker");
+        //logit("PLAY ROUND MARKER");
         this.cardsLeft = this.cardList;
         this.dealCards(human);
         this.dealCards(computer);
         logit("human hand:");
+        logit(human.hand[0].name+", "+human.hand[1].name+", "+human.hand[2].name);
+        /*
         for(let i = 0; i < 3; i++){
           logit(human.hand[i].name);
         }
+        */
         logit("computer hand:");
+        logit(computer.hand[0].name+", "+computer.hand[1].name+", "+computer.hand[2].name);
+        /*
         for(let i = 0; i < 3; i++){
           logit(computer.hand[i].name);
         }
+        */
         //reset score
         human.score = 0;
         computer.score = 0;
@@ -157,6 +167,8 @@ const gamePoke = {
             logit("point "+i+" go!");
             this.playPoint(human,computer);
         }
+        logit(human.score);
+        logit(computer.score);
         if(human.score > computer.score){
             human.rounds += 1;
             logit('human wins round!');
@@ -168,15 +180,16 @@ const gamePoke = {
         else {logit('nobody wins round!');}
         logit("human rounds won = "+human.rounds);
         logit("computer rounds won = "+computer.rounds);
+        logit("");
     },
 
 
 
 
     playPoke(human,computer) {
-        logit('play game marker');
+        //logit('PLAY GAME MARKER');
         for(let i = 1; i <= this.rounds_per_game; i++){
-            logit("round "+i+" begin!");
+            logit("ROUND "+i+" BEGIN!");
             this.playRound(human, computer);
         }
         //human wins ties
@@ -184,12 +197,16 @@ const gamePoke = {
             console.log("Human Wins Game!");
         }
         else {console.log("Computer Wins Game!")}
-        logit(human.cardHistory);
+        logit("human rounds won: "+human.rounds);
+        logit("computer rounds won: "+computer.rounds);
+        logit("computer cards played:");
+        logit("total damage = "+human.totalDamage());
         logit(computer.cardHistory);
-        logit(human.rounds);
-        logit(computer.rounds);
-        logit(human.score);
-        logit(computer.score);
+        logit("human cards played:");
+        logit("total damage = "+computer.totalDamage());
+        logit(human.cardHistory);
+        //logit(human.score);
+        //logit(computer.score);
     }
 }
 
@@ -203,11 +220,19 @@ class Player {
         this.score = 0;
         this.cardHistory = [];
         this.humanity = isHuman;
+        this.damage = 0;
     }
     chooseCard() {
         //do this later...
     }
+    totalDamage(){
+      for(let eachCard of this.cardHistory){
+        this.damage += eachCard.damage;
+      }
+      return this.damage;
+    }
     //in fact move all doubled methods above in here...
+
 }
 
 const david = new Player(true);
