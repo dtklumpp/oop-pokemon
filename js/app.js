@@ -83,7 +83,7 @@ constructor(human, computer){
 //to play, run gamePoke.playPoke(comb1, comb1), inputting your combatants
 const gamePoke = {
     cardList: pokeCards,
-    cardsLeft: [],
+    //cardsLeft: [],
     round: 1,
     points_per_round: 1,
     playedCards: [],
@@ -94,8 +94,12 @@ const gamePoke = {
     ///note: stop game if less than 6 cards left
 
     pickCard() {
+        logit('pick card marker');
         index1 = Math.floor(this.cardsLeft.length * Math.random());
-        card1 = this.cardsLeft.splice(index1,1);
+        logit(index1);
+        logit(this.cardsLeft[index1]);
+        let card1 = this.cardsLeft.splice(index1,1);
+        logit(card1.name);
         this.playedCards.push(card1);
         return card1;
     },
@@ -109,12 +113,15 @@ const gamePoke = {
 
     playPoint(human, computer) {
         logit(human.hand);
-        humChoice = prompt("which card?");
+        //humChoice = prompt("which card?");
+        humChoice = Math.floor(Math.random() * human.hand.length);
         humCard = human.hand.splice(humChoice-1,1);
         compChoice = Math.floor(Math.random() * computer.hand.length);
         compCard = computer.hand.splice(compChoice, 1);
         human.history.push(humCard);
         computer.history.push(compCard);
+        logit(humCard.name);
+        logit(compCard.name);
         if(humCard.damage > compCard.damage){
             human.score += 1;
         }
@@ -124,12 +131,17 @@ const gamePoke = {
     },
 
     playRound(human, computer) {
+        this.cardsLeft = this.cardList;
         this.dealCards(human);
         this.dealCards(computer);
+        logit("playround marker");
+        logit(human.hand[1].name);
+        logit(computer.hand[1].name);
         //reset score
         human.score = 0;
         computer.score = 0;
         for(let i = 1; i <= this.points_per_round; i++){
+            logit("point "+i+" go!");
             this.playPoint(human,computer);
         }
         if(human.score > computer.score){
@@ -145,6 +157,7 @@ const gamePoke = {
 
     playPoke(human,computer) {
         for(let i = 1; i <= this.rounds_per_game; i++){
+            logit("round "+i+" begin!");
             this.playRound(human, computer);
         }
         //human wins ties
@@ -152,6 +165,12 @@ const gamePoke = {
             console.log("Human Wins!");
         }
         else {console.log("Computer Wins!")}
+        logit(human.history);
+        logit(computer.history);
+        logit(human.round);
+        logit(computer.round);
+        logit(human.score);
+        logit(computer.score);
     }
 }
 
