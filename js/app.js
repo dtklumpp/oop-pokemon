@@ -96,13 +96,7 @@ const gamePoke = {
     pickCard() {
         //logit('PICK CARD MARKER');
         index1 = Math.floor(this.cardsLeft.length * Math.random());
-        //logit(index1);
-        //logit(this.cardsLeft[index1].name);
-        //logit(this.cardsLeft.length);
-        //logit(this.cardsLeft.splice(index1,1));
         let card1 = this.cardsLeft.splice(index1,1)[0];
-        //logit(this.cardsLeft.length);
-        //logit(card1.name);
         this.playedCards.push(card1);
         return card1;
     },
@@ -110,15 +104,16 @@ const gamePoke = {
     dealCards(player) {
         //logit('DEAL CARDS MARKER');
         player.hand.splice(0,player.hand.length-1); //clear hand
+        //later add loop for variable rounds
         player.hand.push(this.pickCard());
         player.hand.push(this.pickCard());
         player.hand.push(this.pickCard());
+        //both players are drawing cards from the same deck
     },
 
     playPoint(human, computer) {
         //logit('PLAY POINT MARKER');
-        //logit(human.hand);
-        let displayString = "which card?\n";;
+        let displayString = "which card?\n";
         for(let i = 0; i < human.hand.length; i++){
           displayString += ("card "+(i+1)+" = "+human.hand[i].name+" for "+human.hand[i].damage+"\n")
         }
@@ -127,6 +122,7 @@ const gamePoke = {
         humCard = human.hand.splice(humChoice-1,1)[0];
         compChoice = Math.floor(Math.random() * computer.hand.length);
         compCard = computer.hand.splice(compChoice, 1)[0];
+        //this part above should really have been a function in the Player class...
         human.cardHistory.push(humCard);
         computer.cardHistory.push(compCard);
         logit("human plays "+humCard.name+" for "+humCard.damage);
@@ -137,8 +133,6 @@ const gamePoke = {
         else if (compCard.damage > humCard.damage){
             computer.score += 1;
         }
-        //logit(human.score);
-        //logit(computer.score);
     },
 
     playRound(human, computer) {
@@ -146,20 +140,11 @@ const gamePoke = {
         this.cardsLeft = this.cardList;
         this.dealCards(human);
         this.dealCards(computer);
+        //the Game is the dealer who deals cards to the players
         logit("human hand:");
         logit(human.hand[0].name+", "+human.hand[1].name+", "+human.hand[2].name);
-        /*
-        for(let i = 0; i < 3; i++){
-          logit(human.hand[i].name);
-        }
-        */
         logit("computer hand:");
         logit(computer.hand[0].name+", "+computer.hand[1].name+", "+computer.hand[2].name);
-        /*
-        for(let i = 0; i < 3; i++){
-          logit(computer.hand[i].name);
-        }
-        */
         //reset score
         human.score = 0;
         computer.score = 0;
@@ -193,6 +178,7 @@ const gamePoke = {
             this.playRound(human, computer);
         }
         //human wins ties
+        //because of soul
         if(human.rounds >= computer.rounds){
             console.log("Human Wins Game!");
         }
@@ -205,8 +191,6 @@ const gamePoke = {
         logit("human cards played:");
         logit("total damage = "+computer.totalDamage());
         logit(human.cardHistory);
-        //logit(human.score);
-        //logit(computer.score);
     }
 }
 
@@ -224,6 +208,9 @@ class Player {
     }
     chooseCard() {
         //do this later...
+        //currently in Game Object
+        //maybe should stay there?  because drawing from commond deck...
+        //really the Game Object is distributing cards, not t'other way 'round...
     }
     totalDamage(){
       for(let eachCard of this.cardHistory){
@@ -235,7 +222,7 @@ class Player {
 
 }
 
-const david = new Player(true);
-const brock = new Player(false);
+const david = new Player({isHuman: true});
+const brock = new Player({isHuman: false});
 
 gamePoke.playPoke(david, brock);
